@@ -78,6 +78,7 @@ import kotlin.random.Random
             PREF_DOH_CONTROLD -> builder.dohControlD()
             PREF_DOH_NJALLA -> builder.dohNajalla()
             PREF_DOH_SHECAN -> builder.dohShecan()
+            PREF_DOH_LIBREDNS -> builder.dohLibreDNS()
             else -> builder
         }
     }

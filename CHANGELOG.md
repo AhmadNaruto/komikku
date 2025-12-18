@@ -11,8 +11,38 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Improved
+- Minimize memory usage by reducing in-memory cover cache size ([@Lolle2000la](https://github.com/Lolle2000la)) ([#2266](https://github.com/mihonapp/mihon/pull/2266))
+
 ### Changed
-- Delegate Suwayomi tracker authentication to extension ([@cpiber](https://github.com/cpiber)) ([#2476](https://github.com/mihonapp/mihon/pull/2476))
+- Update tracker icons ([@AntsyLich](https://github.com/AntsyLich)) ([#2773](https://github.com/mihonapp/mihon/pull/2773))
+
+### Fixed
+- Fix reader tap zones triggering after scrolling is stopped by tapping ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2680](https://github.com/mihonapp/mihon/pull/2680))
+- Fix shizuku installer not updating installed extensions ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#2697](https://github.com/mihonapp/mihon/pull/2697))
+- Fix mass migration not using the same search queries as individual migration ([@AntsyLich](https://github.com/AntsyLich)) ([#2736](https://github.com/mihonapp/mihon/pull/2736))
+- Fix reader not saving read duration when changing chapter ([@AntsyLich](https://github.com/AntsyLich), [@KotlinHero](https://github.com/KotlinHero)) ([#2784](https://github.com/mihonapp/mihon/pull/2784))
+- Fix pre-1970 upload date display in chapter list ([@MajorTanya](https://github.com/MajorTanya)) ([#2779](https://github.com/mihonapp/mihon/pull/2779))
+
+## [v0.19.3] - 2025-11-07
+### Improved
+- Improved various aspects of the WebView multi window support ([@TheUnlocked](https://github.com/TheUnlocked)) ([#2662](https://github.com/mihonapp/mihon/pull/2662))
+
+### Removed
+- Revert "Fix reader tap zones triggering after scrolling was stopped by the user" due to introduction of regression ([@AntsyLich](https://github.com/AntsyLich)) ([#2670](https://github.com/mihonapp/mihon/pull/2670))
+
+### Fixed
+- Fix WebView crash introduced in 0.19.2 ([@bapeey](https://github.com/bapeey)) ([#2649](https://github.com/mihonapp/mihon/pull/2649))
+- Fix extra padding appearing in reader after user interactions ([@AntsyLich](https://github.com/AntsyLich)) ([#2669](https://github.com/mihonapp/mihon/pull/2669))
+- Fix long strip reader not scrolling on consecutive taps ([@AntsyLich](https://github.com/AntsyLich)) ([#2670](https://github.com/mihonapp/mihon/pull/2670))
+
+## [v0.19.2] - 2025-11-02
+### Added
+- Advanced setting to limit download filenames to ASCII characters. This is provided only as a workaround for OSes that do not properly handle standard Unicode filenames. This setting is generally not recommended and should only be used as a last resort ([@raxod502](https://github.com/radian-software)) ([#2305](https://github.com/mihonapp/mihon/pull/2305))
+- Option to customize the number of concurrent source and page downloads ([@AntsyLich](https://github.com/AntsyLich)) ([#2637](https://github.com/mihonapp/mihon/pull/2637))
+
+### Changed
+- Increased default concurrent page downloads to 5 ([@AntsyLich](https://github.com/AntsyLich)) ([#2637](https://github.com/mihonapp/mihon/pull/2637))
 
 ### Improved
 - Spoofing of `X-Requested-With` header to support newer WebView versions ([@Guzmazow](https://github.com/Guzmazow)) ([#2491](https://github.com/mihonapp/mihon/pull/2491))

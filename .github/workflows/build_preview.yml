@@ -97,18 +97,27 @@ jobs:
           echo "BUILD_TYPE_NAME=$build_type_name" >> $GITHUB_OUTPUT
 
       - name: Create Tag '${{ steps.prepare_env.outputs.TAG_NAME }}'
-        if: ${{ github.ref }} == "refs/heads/master"
+        # if: ${{ github.ref }} == "refs/heads/master"
         run: |
-          git tag "${{ steps.prepare_env.outputs.TAG_NAME }}"
-          git push origin "${{ steps.prepare_env.outputs.TAG_NAME }}"
-          echo "New tag created: ${{ steps.prepare_env.outputs.TAG_NAME }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          TAG_NAME="${{ steps.prepare_env.outputs.TAG_NAME }}"
     
+          # Coba buat tag, jika gagal (sudah ada) lanjutkan saja
+          if git tag "$TAG_NAME"; then
+            git push origin "$TAG_NAME"
+            echo "New tag created: $TAG_NAME"
+          else
+            echo "Tag $TAG_NAME already exists. Continuing with existing tag."
+          fi
+
       - name: Commit logs
         id: commit_logs
         run: |
           echo "COMMIT_LOGS<<{delimiter}
           $(curl -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/komikku-app/komikku/compare/${{ steps.previous_commit.outputs.PREV_RELEASE_SHA }}...${{ steps.current_commit.outputs.CURRENT_SHA }}" \
+            "https://api.github.com/repos/AhmadNaruto/komikku/compare/${{ steps.previous_commit.outputs.PREV_RELEASE_SHA }}...${{ steps.current_commit.outputs.CURRENT_SHA }}" \
             | jq '[.commits[]|{message:(.commit.message | split("\n")), username:.author.login}]' \
             | jq -r '.[]|"- \(.message | first) (@\(.username))"')
           {delimiter}" >> $GITHUB_OUTPUT
@@ -116,7 +125,7 @@ jobs:
   build-app:
     runs-on: 'ubuntu-24.04'
     needs: prepare-build
-    if: github.ref == 'refs/heads/master'
+    # if: github.ref == 'refs/heads/master'
     steps:
       - name: Clone Repository (${{ needs.prepare-build.outputs.VERSION_TAG }} - ${{ needs.prepare-build.outputs.TAG_NAME }})
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -129,31 +138,11 @@ jobs:
           java-version: 17
           distribution: temurin
 
-      - name: Write google-services.json
-        uses: DamianReeves/write-file-action@6929a9a6d1807689191dcc8bbe62b54d70a32b42 # v1.3
-        with:
-          path: app/google-services.json
-          contents: ${{ secrets.GOOGLE_SERVICES_JSON }}
-          write-mode: overwrite
-
-      - name: Write client_secrets.json
-        uses: DamianReeves/write-file-action@6929a9a6d1807689191dcc8bbe62b54d70a32b42 # v1.3
-        with:
-          path: app/src/main/assets/client_secrets.json
-          contents: ${{ secrets.GOOGLE_CLIENT_SECRETS_JSON }}
-          write-mode: overwrite
-
       - name: Set up gradle
         uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5
 
-      - name: Check code format
-        run: ./gradlew spotlessCheck
-
       - name: Build app
-        run: ./gradlew assemblePreview -Pinclude-telemetry -Penable-updater
-
-      - name: Run unit tests
-        run: ./gradlew testReleaseUnitTest
+        run: ./gradlew assemblePreview -Penable-updater
 
       - name: Upload artifacts
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0

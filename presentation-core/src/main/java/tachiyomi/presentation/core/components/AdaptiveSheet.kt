@@ -46,6 +46,7 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
+import androidx.compose.foundation.gestures.AnchoredDraggableDefaults
 
 private val sheetAnimationSpec = tween<Float>(durationMillis = 350)
 
@@ -108,15 +109,22 @@ fun AdaptiveSheet(
         }
     } else {
         val decayAnimationSpec = rememberSplineBasedDecay<Float>()
+        
         val anchoredDraggableState = remember {
             AnchoredDraggableState(
                 initialValue = 1,
-                positionalThreshold = { with(density) { 56.dp.toPx() } },
-                velocityThreshold = { with(density) { 125.dp.toPx() } },
-                snapAnimationSpec = sheetAnimationSpec,
-                decayAnimationSpec = decayAnimationSpec,
+                confirmValueChange = { true },
             )
         }
+        
+        val flingBehavior = AnchoredDraggableDefaults.flingBehavior(
+            state = anchoredDraggableState,
+            positionalThreshold = { with(density) { 56.dp.toPx() } },
+            velocityThreshold = { with(density) { 125.dp.toPx() } },
+            snapAnimationSpec = sheetAnimationSpec,
+            decayAnimationSpec = decayAnimationSpec,
+        )
+        
         val internalOnDismissRequest = {
             if (anchoredDraggableState.settledValue == 0) {
                 scope.launch { anchoredDraggableState.animateTo(1) }
@@ -150,9 +158,10 @@ fun AdaptiveSheet(
                     .then(
                         if (enableSwipeDismiss) {
                             Modifier.nestedScroll(
-                                remember(anchoredDraggableState) {
+                                remember(anchoredDraggableState, flingBehavior) {
                                     anchoredDraggableState.preUpPostDownNestedScrollConnection(
-                                        onFling = { scope.launch { anchoredDraggableState.settle(it) } },
+                                        flingBehavior = flingBehavior,
+                                        scope = scope,
                                     )
                                 },
                             )
@@ -174,6 +183,7 @@ fun AdaptiveSheet(
                         state = anchoredDraggableState,
                         orientation = Orientation.Vertical,
                         enabled = enableSwipeDismiss,
+                        flingBehavior = flingBehavior,
                     )
                     .navigationBarsPadding()
                     .statusBarsPadding(),
@@ -202,7 +212,8 @@ fun AdaptiveSheet(
 }
 
 private fun <T> AnchoredDraggableState<T>.preUpPostDownNestedScrollConnection(
-    onFling: (velocity: Float) -> Unit,
+    flingBehavior: androidx.compose.foundation.gestures.FlingBehavior,
+    scope: kotlinx.coroutines.CoroutineScope,
 ) = object : NestedScrollConnection {
     override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
         val delta = available.toFloat()
@@ -228,17 +239,17 @@ private fun <T> AnchoredDraggableState<T>.preUpPostDownNestedScrollConnection(
     override suspend fun onPreFling(available: Velocity): Velocity {
         val toFling = available.toFloat()
         return if (toFling < 0 && offset > anchors.minPosition()) {
-            onFling(toFling)
-            // since we go to the anchor with tween settling, consume all for the best UX
-            available
+            val remainingVelocity = flingBehavior.performFling(toFling)
+            // Consume the fling velocity that was used
+            Velocity(0f, toFling - remainingVelocity)
         } else {
             Velocity.Zero
         }
     }
 
     override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
-        onFling(available.toFloat())
-        return available
+        val remainingVelocity = flingBehavior.performFling(available.toFloat())
+        return Velocity(0f, remainingVelocity)
     }
 
     private fun Float.toOffset(): Offset = Offset(0f, this)

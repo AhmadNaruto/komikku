@@ -133,7 +133,7 @@ fun OkHttpClient.newCachelessCallWithProgress(request: Request, listener: Progre
 
     return progressClient.newCall(request)
 }
-
+/**
 context(Json)
 inline fun <reified T> Response.parseAs(): T {
     return decodeFromJsonResponse(serializer(), this)
@@ -141,6 +141,20 @@ inline fun <reified T> Response.parseAs(): T {
 
 context(Json)
 fun <T> decodeFromJsonResponse(
+    deserializer: DeserializationStrategy<T>,
+    response: Response,
+): T {
+    return response.body.source().use {
+        decodeFromBufferedSource(deserializer, it)
+    }
+} */
+inline fun <reified T> Response.parseAs(): T = parseAs(Json.Default)
+
+inline fun <reified T> Response.parseAs(json: Json): T {
+    return json.decodeFromJsonResponse(serializer(), this)
+}
+
+fun <T> Json.decodeFromJsonResponse(
     deserializer: DeserializationStrategy<T>,
     response: Response,
 ): T {

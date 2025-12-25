@@ -76,7 +76,7 @@ import kotlin.random.Random
             PREF_DOH_QUAD101 -> builder.dohQuad101()
             PREF_DOH_MULLVAD -> builder.dohMullvad()
             PREF_DOH_CONTROLD -> builder.dohControlD()
-            PREF_DOH_NJALLA -> builder.dohNajalla()
+            PREF_DOH_NJALLA -> builder.dohNjalla()
             PREF_DOH_SHECAN -> builder.dohShecan()
             PREF_DOH_LIBREDNS -> builder.dohLibreDNS()
             else -> builder

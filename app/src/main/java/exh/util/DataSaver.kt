@@ -92,14 +92,15 @@ private class WsrvNlDataSaver(preferences: SourcePreferences) : DataSaver {
 
     private fun getUrl(imageUrl: String): String {
         // Network Request sent to wsrv
-        return "https://wsrv.nl/?url=$imageUrl" +
+        val w = "480"
+        return "https://wsrv.nl/?url=$imageUrl&w=$w" +
             if (imageUrl.contains(".webp", true) || imageUrl.contains(".gif", true)) {
                 if (!format) {
                     // Preserve output image extension for animated images(.webp and .gif)
-                    "&q=$quality&n=-1"
+                    "&q=$quality&n=-1&ll"
                 } else {
                     // Do not preserve output Extension if User asked to convert into Jpeg
-                    "&output=jpg&q=$quality&n=-1"
+                    "&output=jpg&q=$quality&n=-1&il"
                 }
             } else {
                 if (format) {

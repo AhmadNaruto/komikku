@@ -2,13 +2,19 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     id("mihon.library")
-    kotlin("multiplatform")
+    alias(libs.plugins.androidKotlinMultiplatform)
     kotlin("plugin.serialization")
     id("com.github.ben-manes.versions")
 }
 
 kotlin {
-    androidTarget()
+    android {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "1.8"
+            }
+        }
+    }
     sourceSets {
         val commonMain by getting {
             dependencies {

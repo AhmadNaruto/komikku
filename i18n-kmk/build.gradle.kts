@@ -1,12 +1,18 @@
 plugins {
     id("mihon.library")
-    kotlin("multiplatform")
+    alias(libs.plugins.androidKotlinMultiplatform)
     alias(libs.plugins.moko)
     id("com.github.ben-manes.versions")
 }
 
 kotlin {
-    androidTarget()
+    android {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "1.8"
+            }
+        }
+    }
 
     applyDefaultHierarchyTemplate()
 

@@ -2,11 +2,17 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     id("mihon.library")
-    kotlin("multiplatform")
+    alias(libs.plugins.androidKotlinMultiplatform)
 }
 
 kotlin {
-    androidTarget()
+    android {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "1.8"
+            }
+        }
+    }
     sourceSets {
         val commonMain by getting {
             dependencies {

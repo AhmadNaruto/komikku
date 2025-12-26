@@ -699,8 +699,12 @@ object SettingsAdvancedScreen : SearchableSettings {
                     entries = listOf(
                         "10%",
                         "20%",
+                        "25%",
+                        "30%",
+                        "35%",
                         "40%",
                         "50%",
+                        "60%",
                         "70%",
                         "80%",
                         "90%",

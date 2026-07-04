@@ -309,3 +309,10 @@
 -dontwarn org.ietf.jgss.Oid
 -dontwarn com.google.re2j.Matcher
 -dontwarn com.google.re2j.Pattern
+
+# Kotlin compiler plugin service references in R8
+-dontwarn org.jetbrains.kotlin.compiler.plugin.CommandLineProcessor
+-dontwarn org.jetbrains.kotlin.compiler.plugin.ComponentRegistrar
+-dontwarn org.jetbrains.kotlin.diagnostics.rendering.DefaultErrorMessages$Extension
+-dontwarn org.jetbrains.kotlin.metadata.**
+

@@ -113,6 +113,13 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
 
     @SuppressLint("LaunchActivityFromNotification")
     override fun onCreate() {
+        // KMK -->
+        try {
+            io.github.imagelibs.vips.Vips.init()
+        } catch (e: Throwable) {
+            logcat(LogPriority.ERROR, e) { "Failed to initialize Vips" }
+        }
+        // KMK <--
         super<Application>.onCreate()
         patchInjekt()
         TelemetryConfig.init(

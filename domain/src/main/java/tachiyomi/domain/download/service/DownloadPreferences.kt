@@ -47,6 +47,13 @@ class DownloadPreferences(
 
     // KMK -->
     fun downloadCacheRenewInterval() = preferenceStore.getInt("download_cache_renew_interval", 1)
+    fun downloadImageConvert() = preferenceStore.getBoolean("download_image_convert", false)
+    fun downloadImageFormat() = preferenceStore.getString("download_image_format", "webp")
+    fun downloadImageCompress() = preferenceStore.getBoolean("download_image_compress", false)
+    fun downloadImageCompressQuality() = preferenceStore.getInt("download_image_compress_quality", 80)
+    fun downloadImageResize() = preferenceStore.getBoolean("download_image_resize", false)
+    fun downloadImageResizeMethod() = preferenceStore.getString("download_image_resize_method", "avir")
+    fun downloadImageResizeWidth() = preferenceStore.getInt("download_image_resize_width", 1080)
     // KMK <--
 
     companion object {

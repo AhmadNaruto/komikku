@@ -195,7 +195,10 @@ class WebtoonPageHolder(
 
         try {
             val (source, isAnimated) = withIOContext {
-                val source = streamFn().use { process(Buffer().readFrom(it)) }
+                var source = streamFn().use { process(Buffer().readFrom(it)) }
+                // KMK -->
+                source = eu.kanade.tachiyomi.ui.reader.viewer.ImageEnhancer.enhanceIfNeeded(context, source)
+                // KMK <--
                 val isAnimated = ImageUtil.isAnimatedAndSupported(source)
                 Pair(source, isAnimated)
             }

@@ -66,6 +66,10 @@ internal fun ReadingModePage(screenModel: ReaderSettingsScreenModel) {
     } else {
         PagerViewerSettings(screenModel)
     }
+
+    // KMK -->
+    ImageEnhanceSettings(screenModel)
+    // KMK <--
 }
 
 @Composable
@@ -362,3 +366,38 @@ private fun TapZonesItems(
         }
     }
 }
+
+// KMK -->
+@Composable
+private fun ImageEnhanceSettings(screenModel: ReaderSettingsScreenModel) {
+    HeadingItem(stringResource(KMR.strings.pref_reader_image_enhance_group))
+
+    val enhancePref = screenModel.preferences.readerImageEnhance()
+    val enhanceEnabled by enhancePref.collectAsState()
+
+    CheckboxItem(
+        label = stringResource(KMR.strings.pref_reader_image_enhance),
+        pref = enhancePref,
+    )
+
+    if (enhanceEnabled) {
+        val enhanceMethodPref = screenModel.preferences.readerImageEnhanceMethod()
+        val enhanceMethod by enhanceMethodPref.collectAsState()
+
+        SettingsChipRow(KMR.strings.pref_reader_image_enhance_method) {
+            val methods = listOf(
+                "ai_upscale" to KMR.strings.pref_reader_image_enhance_ai_upscale,
+                "lancir" to KMR.strings.pref_reader_image_enhance_lancir,
+                "avir" to KMR.strings.pref_reader_image_enhance_avir,
+            )
+            methods.forEach { (value, labelRes) ->
+                FilterChip(
+                    selected = enhanceMethod == value,
+                    onClick = { enhanceMethodPref.set(value) },
+                    label = { Text(stringResource(labelRes)) },
+                )
+            }
+        }
+    }
+}
+// KMK <--

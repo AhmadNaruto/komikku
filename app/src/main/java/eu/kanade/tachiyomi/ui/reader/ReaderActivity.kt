@@ -526,6 +526,9 @@ class ReaderActivity : BaseActivity() {
         config = null
         menuToggleToast?.cancel()
         readingModeToast?.cancel()
+        // KMK -->
+        eu.kanade.tachiyomi.ui.reader.viewer.ImageEnhancer.cleanup()
+        // KMK <--
     }
 
     override fun onPause() {

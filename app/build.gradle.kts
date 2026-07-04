@@ -115,6 +115,7 @@ android {
 
     packaging {
         jniLibs {
+            useLegacyPackaging = true
             keepDebugSymbols += listOf(
                 "libandroidx.graphics.path",
                 "libarchive-jni",
@@ -187,6 +188,8 @@ dependencies {
     implementation(projects.i18n)
     // KMK -->
     implementation(projects.i18nKmk)
+    implementation(files("libs/imagelibs-release.aar"))
+    implementation(files("libs/ai-upscale.aar"))
     // KMK <--
     // SY -->
     implementation(projects.i18nSy)

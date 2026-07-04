@@ -238,4 +238,27 @@
     <string name="pref_discord_show_download_button_summary">Displays a button to download the app</string>
     <string name="pref_discord_show_discord_button">Show Discord Button</string>
     <string name="pref_discord_show_discord_button_summary">Displays a button to join the Discord server</string>
+
+    <!-- KMK -->
+    <!-- Download post processing -->
+    <string name="pref_download_post_processing">Download Image Post-Processing</string>
+    <string name="pref_download_image_convert">Convert image extension</string>
+    <string name="pref_download_image_convert_summary">Convert downloaded images to a specific format</string>
+    <string name="pref_download_image_format">Target format</string>
+    <string name="pref_download_image_compress">Compress image</string>
+    <string name="pref_download_image_compress_summary">Compress image after resizing and splitting using libvips</string>
+    <string name="pref_download_image_compress_quality">Compression quality</string>
+    <string name="pref_download_image_resize">Resize image</string>
+    <string name="pref_download_image_resize_summary">Resize image to fit a target width</string>
+    <string name="pref_download_image_resize_method">Resize method</string>
+    <string name="pref_download_image_resize_width">Resize target width</string>
+
+    <!-- Reader image enhancement -->
+    <string name="pref_reader_image_enhance_group">Image Enhancement</string>
+    <string name="pref_reader_image_enhance">Enable image enhancement</string>
+    <string name="pref_reader_image_enhance_method">Enhancement method</string>
+    <string name="pref_reader_image_enhance_ai_upscale">AI Upscale 2x</string>
+    <string name="pref_reader_image_enhance_lancir">LANCIR (Lanczos)</string>
+    <string name="pref_reader_image_enhance_avir">AVIR</string>
+    <!-- KMK -->
 </resources>

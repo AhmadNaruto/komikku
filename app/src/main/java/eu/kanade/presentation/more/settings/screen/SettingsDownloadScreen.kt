@@ -14,6 +14,7 @@ import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.widget.TriStateListDialog
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableMap
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
@@ -79,6 +80,7 @@ object SettingsDownloadScreen : SearchableSettings {
             getDownloadAheadGroup(downloadPreferences = downloadPreferences),
             // KMK -->
             getDownloadCacheRenewInterval(downloadPreferences = downloadPreferences),
+            getDownloadPostProcessingGroup(downloadPreferences = downloadPreferences),
             // KMK <--
         )
     }
@@ -238,6 +240,94 @@ object SettingsDownloadScreen : SearchableSettings {
                 ),
                 Preference.PreferenceItem.InfoPreference(stringResource(KMR.strings.download_cache_renew_interval_info)),
             ),
+        )
+    }
+    // KMK <--
+
+    // KMK -->
+    @Composable
+    private fun getDownloadPostProcessingGroup(
+        downloadPreferences: DownloadPreferences,
+    ): Preference.PreferenceGroup {
+        val convertEnabled by downloadPreferences.downloadImageConvert().collectAsState()
+        val compressEnabled by downloadPreferences.downloadImageCompress().collectAsState()
+        val resizeEnabled by downloadPreferences.downloadImageResize().collectAsState()
+        val compressQuality by downloadPreferences.downloadImageCompressQuality().collectAsState()
+
+        return Preference.PreferenceGroup(
+            title = stringResource(KMR.strings.pref_download_post_processing),
+            preferenceItems = buildList {
+                add(
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = downloadPreferences.downloadImageConvert(),
+                        title = stringResource(KMR.strings.pref_download_image_convert),
+                        subtitle = stringResource(KMR.strings.pref_download_image_convert_summary),
+                    ),
+                )
+                if (convertEnabled) {
+                    add(
+                        Preference.PreferenceItem.ListPreference(
+                            preference = downloadPreferences.downloadImageFormat(),
+                            title = stringResource(KMR.strings.pref_download_image_format),
+                            entries = persistentMapOf(
+                                "webp" to "WebP",
+                                "jpeg" to "JPEG",
+                                "png" to "PNG",
+                            ),
+                        ),
+                    )
+                }
+                add(
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = downloadPreferences.downloadImageCompress(),
+                        title = stringResource(KMR.strings.pref_download_image_compress),
+                        subtitle = stringResource(KMR.strings.pref_download_image_compress_summary),
+                    ),
+                )
+                if (compressEnabled) {
+                    add(
+                        Preference.PreferenceItem.SliderPreference(
+                            value = compressQuality,
+                            valueRange = 1..100,
+                            title = stringResource(KMR.strings.pref_download_image_compress_quality),
+                            onValueChanged = { downloadPreferences.downloadImageCompressQuality().set(it) },
+                        ),
+                    )
+                }
+                add(
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = downloadPreferences.downloadImageResize(),
+                        title = stringResource(KMR.strings.pref_download_image_resize),
+                        subtitle = stringResource(KMR.strings.pref_download_image_resize_summary),
+                    ),
+                )
+                if (resizeEnabled) {
+                    add(
+                        Preference.PreferenceItem.ListPreference(
+                            preference = downloadPreferences.downloadImageResizeMethod(),
+                            title = stringResource(KMR.strings.pref_download_image_resize_method),
+                            entries = persistentMapOf(
+                                "avir" to "AVIR",
+                                "lancir" to "LANCIR",
+                                "libvips" to "libvips",
+                            ),
+                        ),
+                    )
+                    add(
+                        Preference.PreferenceItem.ListPreference(
+                            preference = downloadPreferences.downloadImageResizeWidth(),
+                            title = stringResource(KMR.strings.pref_download_image_resize_width),
+                            entries = persistentMapOf(
+                                720 to "720px",
+                                1080 to "1080px",
+                                1200 to "1200px",
+                                1600 to "1600px",
+                                2000 to "2000px",
+                            ),
+                        ),
+                    )
+                }
+            }.toImmutableList(),
         )
     }
     // KMK <--

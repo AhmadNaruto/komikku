@@ -491,10 +491,18 @@ class Downloader(
                 else -> downloadImage(page, download.source, tmpDir, filename, dataSaver)
             }
 
+            // KMK -->
+            val resizedFile = ImagePostProcessor.resizeIfNeeded(context, file, tmpDir, filename)
             // When the page is ready, set page path, progress (just in case) and status
             splitTallImageIfNeeded(page, tmpDir)
+            ImagePostProcessor.compressAndConvertIfNeeded(context, tmpDir, filename)
 
-            page.uri = file.uri
+            val finalFile = tmpDir.listFiles()?.firstOrNull {
+                it.name.orEmpty().startsWith(filename) && !it.name.orEmpty().endsWith(".tmp")
+            } ?: resizedFile
+
+            page.uri = finalFile.uri
+            // KMK <--
             page.progress = 100
             page.status = Page.State.Ready
         } catch (e: Throwable) {

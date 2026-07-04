@@ -261,6 +261,11 @@ class ReaderPreferences(
         const val CACHE_TO_DISK = 2
     }
 
+    // KMK -->
+    fun readerImageEnhance() = preferenceStore.getBoolean("reader_image_enhance", false)
+    fun readerImageEnhanceMethod() = preferenceStore.getString("reader_image_enhance_method", "ai_upscale")
+    // KMK <--
+
     companion object {
         const val WEBTOON_PADDING_MIN = 0
         const val WEBTOON_PADDING_MAX = 25

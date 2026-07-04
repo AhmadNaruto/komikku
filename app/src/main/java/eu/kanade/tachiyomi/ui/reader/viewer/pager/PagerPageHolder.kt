@@ -190,12 +190,15 @@ class PagerPageHolder(
                     } else {
                         null
                     }.use { source2 ->
-                        val itemSource = if (viewer.config.dualPageSplit) {
+                        var itemSource = if (viewer.config.dualPageSplit) {
                             process(item.first, Buffer().readFrom(source))
                         } else {
                             mergePages(Buffer().readFrom(source), source2?.let { Buffer().readFrom(it) })
                         }
                         // SY <--
+                        // KMK -->
+                        itemSource = eu.kanade.tachiyomi.ui.reader.viewer.ImageEnhancer.enhanceIfNeeded(context, itemSource)
+                        // KMK <--
                         val isAnimated = ImageUtil.isAnimatedAndSupported(itemSource)
                         val background = if (!isAnimated && viewer.config.automaticBackground) {
                             ImageUtil.chooseBackground(context, itemSource.peek())

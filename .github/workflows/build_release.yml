@@ -148,11 +148,7 @@ jobs:
         run: |
           set -e
 
-          mv app/build/outputs/apk/release/app-universal-release-unsigned-signed.apk Komikku-${{ needs.prepare-build.outputs.VERSION_TAG }}.apk
-          mv app/build/outputs/apk/release/app-arm64-v8a-release-unsigned-signed.apk Komikku-arm64-v8a-${{ needs.prepare-build.outputs.VERSION_TAG }}.apk
-          mv app/build/outputs/apk/release/app-armeabi-v7a-release-unsigned-signed.apk Komikku-armeabi-v7a-${{ needs.prepare-build.outputs.VERSION_TAG }}.apk
-          mv app/build/outputs/apk/release/app-x86-release-unsigned-signed.apk Komikku-x86-${{ needs.prepare-build.outputs.VERSION_TAG }}.apk
-          mv app/build/outputs/apk/release/app-x86_64-release-unsigned-signed.apk Komikku-x86_64-${{ needs.prepare-build.outputs.VERSION_TAG }}.apk
+          mv app/build/outputs/apk/release/app-arm64-v8a-release-unsigned-signed.apk Komikku-${{ needs.prepare-build.outputs.VERSION_TAG }}.apk
 
       - name: Create release
         uses: softprops/action-gh-release@718ea10b132b3b2eba29c1007bb80653f286566b # v3.0.1
@@ -177,13 +173,9 @@ jobs:
             <!-->
             > [!TIP]
             >
-            > ### If you are unsure which version to download then go with `Komikku-${{ needs.prepare-build.outputs.VERSION_TAG }}.apk`
+            > ### Download the APK below: `Komikku-${{ needs.prepare-build.outputs.VERSION_TAG }}.apk` (arm64-v8a only)
           files: |
             Komikku-${{ needs.prepare-build.outputs.VERSION_TAG }}.apk
-            Komikku-arm64-v8a-${{ needs.prepare-build.outputs.VERSION_TAG }}.apk
-            Komikku-armeabi-v7a-${{ needs.prepare-build.outputs.VERSION_TAG }}.apk
-            Komikku-x86-${{ needs.prepare-build.outputs.VERSION_TAG }}.apk
-            Komikku-x86_64-${{ needs.prepare-build.outputs.VERSION_TAG }}.apk
           draft: true
           prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}

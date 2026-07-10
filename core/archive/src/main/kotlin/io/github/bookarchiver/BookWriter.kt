@@ -1,4 +1,4 @@
-package bookarchiver
+package io.github.bookarchiver
 
 import android.os.ParcelFileDescriptor
 

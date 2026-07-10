@@ -1,14 +1,14 @@
 package mihon.core.archive
 
 import android.os.ParcelFileDescriptor
-import bookarchiver.BookReader
+import io.github.bookarchiver.BookReader
 import java.io.ByteArrayInputStream
 import java.io.Closeable
 import java.io.InputStream
 
 class ArchiveReader(pfd: ParcelFileDescriptor) : Closeable {
-    // Delegasikan tugas ke Rust BookReader native
-    private val delegate = BookReader(pfd)
+    @PublishedApi
+    internal val delegate = BookReader(pfd)
 
     // SY -->
     var encrypted: Boolean = false

@@ -652,14 +652,14 @@ class Downloader(
         if (archiveFile?.isFile != true) throw Exception("Failed to create archive file for downloaded chapter")
 
         val bookFormat = when (format) {
-            DownloadPreferences.DownloadFormat.CBZ -> bookarchiver.BookFormat.CBZ
-            DownloadPreferences.DownloadFormat.CBT -> bookarchiver.BookFormat.CBT
-            DownloadPreferences.DownloadFormat.BBF -> bookarchiver.BookFormat.BBF
-            else -> bookarchiver.BookFormat.CBZ
+            DownloadPreferences.DownloadFormat.CBZ -> io.github.bookarchiver.BookFormat.CBZ
+            DownloadPreferences.DownloadFormat.CBT -> io.github.bookarchiver.BookFormat.CBT
+            DownloadPreferences.DownloadFormat.BBF -> io.github.bookarchiver.BookFormat.BBF
+            else -> io.github.bookarchiver.BookFormat.CBZ
         }
 
         archiveFile.openFileDescriptor(context, "wt").use { pfd ->
-            bookarchiver.BookWriter(pfd, bookFormat).use { writer ->
+            io.github.bookarchiver.BookWriter(pfd, bookFormat).use { writer ->
                 tmpDir.listFiles()?.forEach { file ->
                     file.openInputStream().use { input ->
                         writer.writePage(file.name ?: "", input)

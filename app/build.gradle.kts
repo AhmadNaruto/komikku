@@ -13,13 +13,6 @@ plugins {
     id("com.github.ben-manes.versions")
 }
 
-if (Config.includeTelemetry) {
-    pluginManager.apply {
-        apply(libs.plugins.google.services.get().pluginId)
-        apply(libs.plugins.firebase.crashlytics.get().pluginId)
-    }
-}
-
 shortcutHelper.setFilePath("./shortcuts.xml")
 
 android {

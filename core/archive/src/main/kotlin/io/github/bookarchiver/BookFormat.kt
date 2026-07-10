@@ -1,4 +1,4 @@
-package bookarchiver
+package io.github.bookarchiver
 
 enum class BookFormat {
     CBZ, // ZIP

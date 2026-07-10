@@ -1,4 +1,4 @@
-package bookarchiver
+package io.github.bookarchiver
 
 import java.io.IOException
 

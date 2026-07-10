@@ -311,23 +311,23 @@
 -dontwarn com.google.re2j.Pattern
 
 # BookArchiver rules
--keep class bookarchiver.BookReader {
+-keep class io.github.bookarchiver.BookReader {
     private native <methods>;
     *** nativePtr;
 }
 
--keep class bookarchiver.BookWriter {
+-keep class io.github.bookarchiver.BookWriter {
     private native <methods>;
     *** nativePtr;
 }
 
--keep class bookarchiver.BookFormat {
+-keep class io.github.bookarchiver.BookFormat {
     **[] $VALUES;
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
 
--keep class bookarchiver.BookException { *; }
--keep class bookarchiver.BookInitializationException { *; }
--keep class bookarchiver.BookPageNotFoundException { *; }
--keep class bookarchiver.BookIOException { *; }
+-keep class io.github.bookarchiver.BookException { *; }
+-keep class io.github.bookarchiver.BookInitializationException { *; }
+-keep class io.github.bookarchiver.BookPageNotFoundException { *; }
+-keep class io.github.bookarchiver.BookIOException { *; }

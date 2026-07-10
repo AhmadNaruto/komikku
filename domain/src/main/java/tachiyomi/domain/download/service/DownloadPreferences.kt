@@ -1,6 +1,7 @@
 package tachiyomi.domain.download.service
 
 import tachiyomi.core.common.preference.PreferenceStore
+import tachiyomi.core.common.preference.getEnum
 
 class DownloadPreferences(
     private val preferenceStore: PreferenceStore,
@@ -12,6 +13,15 @@ class DownloadPreferences(
     )
 
     fun saveChaptersAsCBZ() = preferenceStore.getBoolean("save_chapter_as_cbz", true)
+
+    fun downloadFormat() = preferenceStore.getEnum("download_format", DownloadFormat.CBZ)
+
+    enum class DownloadFormat(val suffix: String) {
+        CBZ(".cbz"),
+        CBT(".cbt"),
+        BBF(".bbf"),
+        DIRECTORY(""),
+    }
 
     fun splitTallImages() = preferenceStore.getBoolean("split_tall_images", true)
 

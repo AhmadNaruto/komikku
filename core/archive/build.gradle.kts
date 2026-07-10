@@ -10,7 +10,6 @@ android {
 
 dependencies {
     implementation(libs.jsoup)
-    implementation(libs.libarchive)
     implementation(libs.unifile)
     // KMK -->
     implementation(projects.core.common)

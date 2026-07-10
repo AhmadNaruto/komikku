@@ -438,8 +438,9 @@ class Downloader(
             )
 
             // Only rename the directory if it's downloaded
-            if (downloadPreferences.saveChaptersAsCBZ().get()) {
-                archiveChapter(mangaDir, chapterDirname, tmpDir)
+            val format = downloadPreferences.downloadFormat().get()
+            if (format != DownloadPreferences.DownloadFormat.DIRECTORY) {
+                archiveChapter(mangaDir, chapterDirname, tmpDir, format)
             } else {
                 tmpDir.renameTo(chapterDirname)
             }
@@ -638,25 +639,35 @@ class Downloader(
     }
 
     /**
-     * Archive the chapter pages as a CBZ.
+     * Archive the chapter pages as the specified format.
      */
     private fun archiveChapter(
         mangaDir: UniFile,
         dirname: String,
         tmpDir: UniFile,
+        format: DownloadPreferences.DownloadFormat,
     ) {
-        // SY -->
-        val encrypt = CbzCrypto.getPasswordProtectDlPref() && CbzCrypto.isPasswordSet()
-        // SY <--
+        val suffix = format.suffix
+        val archiveFile = mangaDir.createFile("$dirname$suffix$TMP_DIR_SUFFIX")
+        if (archiveFile?.isFile != true) throw Exception("Failed to create archive file for downloaded chapter")
 
-        val zip = mangaDir.createFile("$dirname.cbz$TMP_DIR_SUFFIX")
-        if (zip?.isFile != true) throw Exception("Failed to create CBZ file for downloaded chapter")
-        ZipWriter(context, zip, /* SY --> */ encrypt /* SY <-- */).use { writer ->
-            tmpDir.listFiles()?.forEach { file ->
-                writer.write(file)
+        val bookFormat = when (format) {
+            DownloadPreferences.DownloadFormat.CBZ -> bookarchiver.BookFormat.CBZ
+            DownloadPreferences.DownloadFormat.CBT -> bookarchiver.BookFormat.CBT
+            DownloadPreferences.DownloadFormat.BBF -> bookarchiver.BookFormat.BBF
+            else -> bookarchiver.BookFormat.CBZ
+        }
+
+        archiveFile.openFileDescriptor(context, "wt").use { pfd ->
+            bookarchiver.BookWriter(pfd, bookFormat).use { writer ->
+                tmpDir.listFiles()?.forEach { file ->
+                    file.openInputStream().use { input ->
+                        writer.writePage(file.name ?: "", input)
+                    }
+                }
             }
         }
-        zip.renameTo("$dirname.cbz")
+        archiveFile.renameTo("$dirname$suffix")
         tmpDir.delete()
     }
 

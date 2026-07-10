@@ -309,3 +309,25 @@
 -dontwarn org.ietf.jgss.Oid
 -dontwarn com.google.re2j.Matcher
 -dontwarn com.google.re2j.Pattern
+
+# BookArchiver rules
+-keep class bookarchiver.BookReader {
+    private native <methods>;
+    *** nativePtr;
+}
+
+-keep class bookarchiver.BookWriter {
+    private native <methods>;
+    *** nativePtr;
+}
+
+-keep class bookarchiver.BookFormat {
+    **[] $VALUES;
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+-keep class bookarchiver.BookException { *; }
+-keep class bookarchiver.BookInitializationException { *; }
+-keep class bookarchiver.BookPageNotFoundException { *; }
+-keep class bookarchiver.BookIOException { *; }

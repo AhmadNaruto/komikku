@@ -1,15 +1,14 @@
 package mihon.core.archive
 
 import android.os.ParcelFileDescriptor
-import android.system.Os
-import android.system.OsConstants
-import me.zhanghai.android.libarchive.ArchiveException
+import bookarchiver.BookReader
+import java.io.ByteArrayInputStream
 import java.io.Closeable
 import java.io.InputStream
 
 class ArchiveReader(pfd: ParcelFileDescriptor) : Closeable {
-    val size = pfd.statSize
-    val address = Os.mmap(0, size, OsConstants.PROT_READ, OsConstants.MAP_PRIVATE, pfd.fileDescriptor, 0)
+    // Delegasikan tugas ke Rust BookReader native
+    private val delegate = BookReader(pfd)
 
     // SY -->
     var encrypted: Boolean = false
@@ -17,73 +16,37 @@ class ArchiveReader(pfd: ParcelFileDescriptor) : Closeable {
     var wrongPassword: Boolean? = null
         private set
     val archiveHashCode = pfd.hashCode()
-
-    init {
-        checkEncryptionStatus()
-    }
     // SY <--
 
-    inline fun <T> useEntries(block: (Sequence<ArchiveEntry>) -> T): T = ArchiveInputStream(
-        address,
-        size,
-        // SY -->
-        encrypted,
-        // SY <--
-    ).use { block(generateSequence { it.getNextEntry() }) }
+    /**
+     * Mengembalikan sequence daftar file di dalam arsip.
+     * BookReader mengindeks halaman secara instan dalam O(1) di sisi Rust.
+     */
+    inline fun <T> useEntries(block: (Sequence<ArchiveEntry>) -> T): T {
+        val pages = delegate.getPages()
+        val sequence = pages.asSequence().map { name ->
+            ArchiveEntry(
+                name = name,
+                isFile = true,
+                isEncrypted = false,
+            )
+        }
+        return block(sequence)
+    }
 
+    /**
+     * Membaca satu halaman gambar secara cepat (O(1) Memory-mapped offset lookup)
+     */
     fun getInputStream(entryName: String): InputStream? {
-        val archive = ArchiveInputStream(address, size, /* SY --> */ encrypted /* SY <-- */)
-        try {
-            while (true) {
-                val entry = archive.getNextEntry() ?: break
-                if (entry.name == entryName) {
-                    return archive
-                }
-            }
-        } catch (e: ArchiveException) {
-            archive.close()
-            throw e
+        return try {
+            val bytes = delegate.readPage(entryName)
+            ByteArrayInputStream(bytes)
+        } catch (e: Exception) {
+            null
         }
-        archive.close()
-        return null
     }
-
-    // SY -->
-    private fun checkEncryptionStatus() {
-        val archive = ArchiveInputStream(address, size, false)
-        try {
-            while (true) {
-                val entry = archive.getNextEntry() ?: break
-                if (entry.isEncrypted) {
-                    encrypted = true
-                    isPasswordIncorrect(entry.name)
-                    break
-                }
-            }
-        } catch (e: ArchiveException) {
-            archive.close()
-            throw e
-        }
-        archive.close()
-    }
-
-    private fun isPasswordIncorrect(entryName: String) {
-        try {
-            getInputStream(entryName).use { stream ->
-                stream!!.read()
-            }
-        } catch (e: ArchiveException) {
-            if (e.message == "Incorrect passphrase") {
-                wrongPassword = true
-                return
-            }
-            throw e
-        }
-        wrongPassword = false
-    }
-    // SY <--
 
     override fun close() {
-        Os.munmap(address, size)
+        delegate.close()
     }
 }

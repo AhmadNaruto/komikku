@@ -238,4 +238,11 @@
     <string name="pref_discord_show_download_button_summary">Displays a button to download the app</string>
     <string name="pref_discord_show_discord_button">Show Discord Button</string>
     <string name="pref_discord_show_discord_button_summary">Displays a button to join the Discord server</string>
+
+    <!-- Download Format -->
+    <string name="pref_download_format">Download chapter format</string>
+    <string name="pref_download_format_cbz">CBZ (standard ZIP)</string>
+    <string name="pref_download_format_cbt">CBT (uncompressed TAR)</string>
+    <string name="pref_download_format_bbf">BBF (Bound Book Format - performance optimized)</string>
+    <string name="pref_download_format_directory">DIRECTORY (extracted images folder)</string>
 </resources>

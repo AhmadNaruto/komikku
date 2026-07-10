@@ -117,7 +117,7 @@ android {
         jniLibs {
             keepDebugSymbols += listOf(
                 "libandroidx.graphics.path",
-                "libarchive-jni",
+                "libbookarchiver",
                 "libconscrypt_jni",
                 "libimagedecoder",
                 "libquickjs",

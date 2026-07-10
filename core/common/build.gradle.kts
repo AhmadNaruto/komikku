@@ -37,7 +37,6 @@ dependencies {
     implementation(libs.image.decoder)
 
     implementation(libs.unifile)
-    implementation(libs.libarchive)
 
     api(kotlinx.coroutines.core)
     api(kotlinx.serialization.json)

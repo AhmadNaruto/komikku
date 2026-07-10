@@ -46,9 +46,21 @@ object SettingsDownloadScreen : SearchableSettings {
                 preference = downloadPreferences.downloadOnlyOverWifi(),
                 title = stringResource(MR.strings.connected_to_wifi),
             ),
-            Preference.PreferenceItem.SwitchPreference(
-                preference = downloadPreferences.saveChaptersAsCBZ(),
-                title = stringResource(MR.strings.save_chapter_as_cbz),
+            Preference.PreferenceItem.ListPreference(
+                preference = downloadPreferences.downloadFormat(),
+                entries = DownloadPreferences.DownloadFormat.entries
+                    .associateWith {
+                        stringResource(
+                            when (it) {
+                                DownloadPreferences.DownloadFormat.CBZ -> KMR.strings.pref_download_format_cbz
+                                DownloadPreferences.DownloadFormat.CBT -> KMR.strings.pref_download_format_cbt
+                                DownloadPreferences.DownloadFormat.BBF -> KMR.strings.pref_download_format_bbf
+                                DownloadPreferences.DownloadFormat.DIRECTORY -> KMR.strings.pref_download_format_directory
+                            },
+                        )
+                    }
+                    .toImmutableMap(),
+                title = stringResource(KMR.strings.pref_download_format),
             ),
             Preference.PreferenceItem.SwitchPreference(
                 preference = downloadPreferences.splitTallImages(),

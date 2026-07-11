@@ -46,6 +46,7 @@ import kotlinx.coroutines.supervisorScope
 import logcat.LogPriority
 import mihon.core.archive.CbzCrypto
 import mihon.core.archive.ZipWriter
+import mihon.core.archive.openFileDescriptor
 import nl.adaptivity.xmlutil.serialization.XML
 import okhttp3.Response
 import tachiyomi.core.common.i18n.stringResource
